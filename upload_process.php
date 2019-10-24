@@ -1,6 +1,6 @@
 <?php
 class Uploads {
-    
+
     public static $file_count = 1;
     public static $folder_name = "";
     public static $original = "ORGL";
@@ -8,7 +8,7 @@ class Uploads {
     public static $compressed = "COMP";
     public static $thumb = "THMB";
     public static $watermarkFile = "cpg-watermark.png";
-    
+
     public static $last_Id;
     public static $imgFilename;
 
@@ -18,7 +18,7 @@ class Uploads {
     public static $password = "@CPG12cpg@";
     public static $database = "ckt3_cpg_dblive";
 
-    public static $root_folder = "D:/CKT-Cloud/Dropbox/CPG-WS-Active/CPGI"; //D:\CKT-Cloud\Dropbox\CPG-WS-Active\CPGI
+    public static $root_folder = "F:/Virtual-Storage/SCA-Images"; //D:\CKT-Cloud\Dropbox\CPG-WS-Active\CPGI
 //    public static $root_folder = "C:/inetpub/dd";
 
     public function checkpoint($path, $filename, $img_reference)
@@ -41,7 +41,7 @@ class Uploads {
         imagecreatefromjpeg( $source );
         imagejpeg( $image, $destination, $quality );
     }
-    
+
     public function resizeImage($tempFile, $destination)
     {
         require_once 'ImageManipulator.php';
@@ -49,33 +49,33 @@ class Uploads {
         $newImage = $manipulator->resample(150, 113);
         $manipulator->save($destination);
     }
-    
+
     public function saveInfo($arrays)
     {
-        $sql = "INSERT INTO kpadb_images (img_reference_code, img_parent, img_sub_parent, img_filename, img_order_number) 
+        $sql = "INSERT INTO kpadb_images (img_reference_code, img_parent, img_sub_parent, img_filename, img_order_number)
         VALUES ('". $arrays['img_ref'] ."', '". $arrays['img_part'] ."', '". $arrays['img_item'] ."', '". $arrays['newfilename'] ."', ". (int)$arrays['order_number'] .");";
         $this->Execute($sql);
     }
-    
+
     public function saveLog($arrays)
     {
         require_once 'function.php';
         $f = new Functions;
-        
+
         $dt = $f->dtGetCurrTimeZone($f::$timezone_taipei, FALSE);
-        
+
         $uid = (int)$arrays['admin_id'];
-        
-        $sql = "INSERT INTO kpadb_images_logs (img_ref, admin_id, dateTime) 
+
+        $sql = "INSERT INTO kpadb_images_logs (img_ref, admin_id, dateTime)
         VALUES ('". $arrays['img_ref'] ."', $uid, '$dt');";
         $this->Execute($sql);
     }
-    
+
     public function CreateDB() {
         $this::$connection = mysql_connect($this::$server, $this::$user, $this::$password) or die("could not connect".mysql_error());
         return mysql_select_db($this::$database, $this::$connection);
     }
-    
+
     public function Execute($query)
     {
         try
@@ -144,7 +144,7 @@ class Uploads {
     {
         $file_count = (int)$_GET['file_count'];
     }
-    
+
     if (!empty($_FILES)) {
 
         $tempFile = $_FILES['file']['tmp_name'];
@@ -193,18 +193,4 @@ class Uploads {
         $upload->resizeImage($destination, $thumb_path);
     }
 
-?> 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+?>
