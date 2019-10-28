@@ -14,13 +14,13 @@ class ImageUploader {
     $subs = self::$environment->get_sub_dir();
 
     $path = self::$environment->get_path($reference, $category, $subs["original"]);
-    $this->created_folder($path);
+    $this->created_folder($path["path"]);
 
     $path = self::$environment->get_path($reference, $category, $subs["compressed"]);
-    $this->created_folder($path);
+    $this->created_folder($path["path"]);
 
     $path = self::$environment->get_path($reference, $category, $subs["thumbnail"]);
-    $this->created_folder($path);
+    $this->created_folder($path["path"]);
   }
 
   public function compressedImage($source, $destination, $quality = 50)
