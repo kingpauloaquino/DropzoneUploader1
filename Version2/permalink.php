@@ -11,8 +11,8 @@ $img_cat = $_GET['category']; // Image Category [SCA Unit, Barcode, Addition Pho
 $env = new Environment();
 $img = new Image($env, $img_ref, $img_cat);
 
-$data = $img->get();
+$result = $img->get();
 
-echo $data;
+echo $result;
 
 ?>

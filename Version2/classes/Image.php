@@ -43,7 +43,7 @@ class Image {
 
     $dir = opendir($old["path"]);
 
-    $orig = null;
+    $images = null;
 
     if($dir) {
 
@@ -53,7 +53,7 @@ class Image {
           if ($file == '.' || $file == '..') {
               continue;
           }
-          $orig[] = array("name" => $file, "url" => $url_old . $file);
+          $images[] = array("name" => $file, "url" => $url_old . $file);
       }
       closedir($dir);
 
@@ -70,7 +70,7 @@ class Image {
             if ($file == '.' || $file == '..') {
                 continue;
             }
-            $orig[] = array("name" => $file, "url" => $url . $file);
+            $images[] = array("name" => $file, "url" => $url . $file);
         }
         closedir($dir);
 
@@ -78,7 +78,7 @@ class Image {
 
     }
 
-    return $orig;
+    return $images;
   }
 
 }

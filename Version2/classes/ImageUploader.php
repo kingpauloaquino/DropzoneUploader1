@@ -74,14 +74,25 @@ class ImageUploader {
       $path2 = $this->get_location(2, $filename);
       $this->resizeImage($file, $path2, $this->get_image_size());
 
-      return true;
+      return json_encode(array(
+        "status" => 200,
+        "message" => "Success"
+      ));
+
     }
     else {
       copy($source, $destination);
-      return true;
+
+      return json_encode(array(
+        "status" => 200,
+        "message" => "Success"
+      ));
     }
 
-    return false;
+    return json_encode(array(
+      "status" => 500,
+      "message" => "Fail"
+    ));
 
   }
 }

@@ -25,23 +25,9 @@ if (!empty($_FILES)) {
   $filename = $_FILES['filedata']['name'];
   $size = $_FILES['filedata']['size'];
 
-  // var_dump($temp);
-  // var_dump($filename);
-  // var_dump($size);
+  $result = $img->upload($temp, $filename);
 
-  $arr = array(
-    "status" => 500,
-    "message" => "Fail"
-  );
-
-  if($img->upload($temp, $filename)) {
-    $arr = array(
-      "status" => 200,
-      "message" => "Success"
-    );
-  }
-
-  echo json_encode($arr);
+  echo $result;
 
 }
 
