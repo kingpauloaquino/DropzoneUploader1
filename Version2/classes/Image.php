@@ -41,36 +41,36 @@ class Image {
     $url_old = self::$environment::$based_url_old;
     $url = self::$environment::$based_url;
 
-    $dir = opendir($old["path"]);
-
     $images = null;
+
+    $dir = opendir($new["path"]);
 
     if($dir) {
 
-      $url_old = $url_old . "/" . $old["reference"] . "/" . $old["name"] . "/";
+      $url = $url . "/" . $new["reference"] . "/" . $new["name"] . "/" . $new["category"] . "/";
 
       while ($file = readdir($dir)) {
-          if ($file == '.' || $file == '..') {
-              continue;
-          }
-          $images[] = array("name" => $file, "url" => $url_old . $file);
+        if ($file == '.' || $file == '..') {
+            continue;
+        }
+        $images[] = array("name" => $file, "url" => $url . $file);
       }
       closedir($dir);
 
     }
     else {
 
-      $dir = opendir($new["path"]);
+      $dir = opendir($old["path"]);
 
       if($dir) {
 
-        $url = $url . "/" . $new["reference"] . "/" . $new["name"] . "/" . $new["category"] . "/";
+        $url_old = $url_old . "/" . $old["reference"] . "/" . $old["name"] . "/";
 
         while ($file = readdir($dir)) {
-            if ($file == '.' || $file == '..') {
-                continue;
-            }
-            $images[] = array("name" => $file, "url" => $url . $file);
+          if ($file == '.' || $file == '..') {
+              continue;
+          }
+          $images[] = array("name" => $file, "url" => $url_old . $file);
         }
         closedir($dir);
 
