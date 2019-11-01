@@ -13,10 +13,10 @@ class Image {
   public static $compressed_old;
   public static $thumbnail_old;
 
-  public function __construct($env, $reference, $category)
+  public function __construct($env, $reference, $category, $parent)
   {
     self::$environment = $env;
-    $subs = self::$environment->get_sub_dir();
+    $subs = self::$environment->get_sub_dir($parent);
 
     self::$original_old = self::$environment->get_old_path($reference, $subs["original"]);
     self::$compressed_old = self::$environment->get_old_path($reference, $subs["compressed"]);
@@ -47,7 +47,7 @@ class Image {
 
     if($dir) {
 
-      $url = $url . "/" . $new["reference"] . "/" . $new["name"] . "/" . $new["category"] . "/";
+      $url = $url . "/" . $new["reference"] . "/" . $new["category"] . "/" . $new["name"] . "/" ;
 
       while ($file = readdir($dir)) {
         if ($file == '.' || $file == '..') {

@@ -7,20 +7,37 @@ class ImageUploader {
   public static $environment;
   public static $image_sizes;
   public static $destinations_cache;
+  public static $parent_additional_photo;
 
-  public function __construct($env, $reference, $category)
+  public function __construct($env, $reference, $category, $parent)
   {
     self::$environment = $env;
-    $subs = self::$environment->get_sub_dir();
+    self::$parent_additional_photo = $parent;
+    $subs = self::$environment->get_sub_dir($parent);
 
-    $path = self::$environment->get_path($reference, $category, $subs["original"]);
-    $this->created_folder($path["path"]);
+    if($parent != null) {
+      $path = self::$environment->get_path($reference, $category, $parent);
+      $this->created_folder($path["path"], true);
 
-    $path = self::$environment->get_path($reference, $category, $subs["compressed"]);
-    $this->created_folder($path["path"]);
+      $path = self::$environment->get_path($reference, $category, $subs["original"]);
+      $this->created_folder($path["path"]);
 
-    $path = self::$environment->get_path($reference, $category, $subs["thumbnail"]);
-    $this->created_folder($path["path"]);
+      $path = self::$environment->get_path($reference, $category, $subs["compressed"]);
+      $this->created_folder($path["path"]);
+
+      $path = self::$environment->get_path($reference, $category, $subs["thumbnail"]);
+      $this->created_folder($path["path"]);
+    }
+    else {
+      $path = self::$environment->get_path($reference, $category, $subs["original"]);
+      $this->created_folder($path["path"]);
+
+      $path = self::$environment->get_path($reference, $category, $subs["compressed"]);
+      $this->created_folder($path["path"]);
+
+      $path = self::$environment->get_path($reference, $category, $subs["thumbnail"]);
+      $this->created_folder($path["path"]);
+    }
   }
 
   public function compressedImage($source, $destination, $quality = 50)
@@ -41,12 +58,14 @@ class ImageUploader {
       $manipulator->save($destination);
   }
 
-  public function created_folder($path)
+  public function created_folder($path, $isParent = false)
   {
       if (!file_exists($path)) {
           mkdir($path, 0777, true);
       }
-      self::$destinations_cache[] = $path;
+      if(!$isParent) {
+        self::$destinations_cache[] = $path;
+      }
   }
 
   public function get_location($catId, $filename)
@@ -66,12 +85,15 @@ class ImageUploader {
     if($move) {
 
       $file = $this->get_location(0, $filename);
+
       move_uploaded_file($source, $file);
 
       $path1 = $this->get_location(1, $filename);
+
       $this->compressedImage($file, $path1);
 
       $path2 = $this->get_location(2, $filename);
+
       $this->resizeImage($file, $path2, $this->get_image_size());
 
       return json_encode(array(
