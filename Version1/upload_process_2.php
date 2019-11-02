@@ -18,8 +18,7 @@ class Uploads {
     public static $password = "@CPG12cpg@";
     public static $database = "ckt3_cpg_dblive";
 
-    public static $root_folder = "C:/SCA-OldImage"; //D:\CKT-Cloud\Dropbox\CPG-WS-Active\CPGI
-//    public static $root_folder = "C:/inetpub/dd";
+    public static $root_folder = "C:/SCA-OldImage";
 
     public static $root_additional_folder = "C:/SCA-Images";
 
@@ -144,14 +143,14 @@ class Uploads {
     }
     if(IsSet($_GET['parent']))
     {
-        $parent = $_GET['parent'];
+        $additional = $_GET['parent'];
     }
     if(IsSet($_GET['file_count']))
     {
         $file_count = (int)$_GET['file_count'];
     }
 
-    if (!empty($_FILES)) {
+    if (empty($_FILES)) {
 
         $tempFile = $_FILES['file']['tmp_name'];
         $filename = $_FILES['file']['name'];
@@ -160,7 +159,8 @@ class Uploads {
         $root_path = $upload::$root_folder ."/". $dir_name ."/".  $upload::$original;
         $newFilename = $upload->checkpoint($path, $filename, $img_ref);
 
-        if($edited == "NOT") {
+        if($edited == "NOT")
+        {
             $destination  = $root_path ."/". $newFilename;
             move_uploaded_file($tempFile, $destination);
 
@@ -168,8 +168,8 @@ class Uploads {
             copy($destination, $edited_path);
         }
 
-        elseif($edited == "CATPAL") {
-
+        elseif($edited == "CATPAL")
+        {
             $names = explode("_", $dir_name);
             if(count($names) > 2) {
 
@@ -188,46 +188,35 @@ class Uploads {
                 copy($destination, $edited_path);
 
                 $compressed_path = $upload::$root_folder ."/". $dir_name ."/".  $upload::$compressed ."/". $newFilename;
-
                 $thumb_path = $upload::$root_folder ."/". $dir_name ."/".  $upload::$thumb ."/". $newFilename;
             }
-
         }
 
-        elseif($edited == "ADDITIONAL") {
+        elseif($edited == "ADDITIONAL")
+        {
+            $upload->created_folder($upload::$root_additional_folder ."/". $dir_name);
+            $upload->created_folder($upload::$root_additional_folder ."/". $dir_name ."/additional-photo/". $additional);
+            $upload->created_folder($upload::$root_additional_folder ."/". $dir_name ."/additional-photo/". $additional ."/". $upload::$original);
+            $upload->created_folder($upload::$root_additional_folder ."/". $dir_name ."/additional-photo/". $additional ."/". $upload::$compressed);
+            $upload->created_folder($upload::$root_additional_folder ."/". $dir_name ."/additional-photo/". $additional ."/". $upload::$thumb);
 
-            $names = explode("_", $dir_name);
-            if(count($names) > 1) {
+            $root_path = $upload::$root_additional_folder ."/". $dir_name ."/additional-photo/".  $additional ."/". $upload::$original;
+            $destination  = $root_path ."/". $newFilename;
+            move_uploaded_file($tempFile, $destination);
 
-                $dir_name = $names[0] ."-". $names[1];
-                $upload->created_folder($upload::$root_additional_folder ."/". $dir_name);
-                $upload->created_folder($upload::$root_additional_folder ."/". $dir_name . "/additional-photo/" . $parent);
-                $upload->created_folder($upload::$root_additional_folder ."/". $dir_name . "/additional-photo/" . $parent ."/". $upload::$original);
-                $upload->created_folder($upload::$root_additional_folder ."/". $dir_name . "/additional-photo/" . $parent ."/". $upload::$edited);
-                $upload->created_folder($upload::$root_additional_folder ."/". $dir_name . "/additional-photo/" . $parent ."/". $upload::$compressed);
-                $upload->created_folder($upload::$root_additional_folder ."/". $dir_name . "/additional-photo/" . $parent ."/". $upload::$thumb);
-
-                $root_path = $upload::$root_additional_folder ."/". $dir_name . "/additional-photo/" . $parent ."/".  $upload::$original;
-                $destination  = $root_path ."/". $newFilename;
-                move_uploaded_file($tempFile, $destination);
-
-                $edited_path = $upload::$root_additional_folder ."/". $dir_name . "/additional-photo/" . $parent ."/".  $upload::$edited ."/". $newFilename;
-                copy($destination, $edited_path);
-
-                $compressed_path = $upload::$root_additional_folder ."/". $dir_name . "/additional-photo/" . $parent ."/".  $upload::$compressed ."/". $newFilename;
-                $thumb_path = $upload::$root_additional_folder ."/". $dir_name . "/additional-photo/" . $parent ."/".  $upload::$thumb ."/". $newFilename;
-            }
-
+            $compressed_path = $upload::$root_additional_folder ."/". $dir_name ."/additional-photo/". $additional ."/".  $upload::$compressed ."/". $newFilename;
+            $thumb_path = $upload::$root_additional_folder ."/". $dir_name ."/additional-photo/". $additional ."/".  $upload::$thumb ."/". $newFilename;
         }
 
-        else {
+        else
+        {
             $destination = $upload::$root_folder ."/". $dir_name ."/".  $upload::$edited ."/". $newFilename;
             move_uploaded_file($tempFile, $destination);
         }
 
-
         $upload->compressedImage($compressed_path, $destination);
         $upload->resizeImage($destination, $thumb_path);
+
     }
 
 ?>
